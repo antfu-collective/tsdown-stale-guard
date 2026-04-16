@@ -13,7 +13,7 @@ const RE_QUERY = /\?.*$/
 const RE_WINDOWS_DRIVE = /^[a-z]:\\/i
 const RE_NODE_MODULES = /node_modules/
 
-export function tsdownLock(options: TsdownLockPluginOptions = {}): Plugin {
+export function TsdownLock(options: TsdownLockPluginOptions = {}): Plugin {
   const {
     lockFile = 'tsdown.lock.yaml',
     hashOutputs = true,

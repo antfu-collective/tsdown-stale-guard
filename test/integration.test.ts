@@ -3,7 +3,7 @@ import { readFile, rm, writeFile } from 'node:fs/promises'
 import { resolve } from 'node:path'
 import { build } from 'tsdown'
 import { afterEach, describe, expect, it } from 'vitest'
-import { checkBuildFreshness, parseLockFile, tsdownLock } from '../src'
+import { checkBuildFreshness, parseLockFile, TsdownLock } from '../src'
 
 const fixtures = resolve(import.meta.dirname, 'fixtures')
 
@@ -24,7 +24,7 @@ async function buildFixture(name: string, entry: string[] = ['src/index.ts']) {
     cwd: dir,
     entry: entry.map(e => resolve(dir, e)),
     outDir: resolve(dir, 'dist'),
-    plugins: [tsdownLock({ root: dir })],
+    plugins: [TsdownLock({ root: dir })],
   })
 }
 

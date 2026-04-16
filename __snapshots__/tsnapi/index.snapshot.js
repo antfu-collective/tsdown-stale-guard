@@ -4,4 +4,4 @@ export async function checkBuildFreshness(_) {}
 export function parseLockFile(_) {}
 export async function readLockFile(_) {}
 export function serializeLockFile(_) {}
-export function tsdownLock(_) {}
+export function TsdownLock(_) {}

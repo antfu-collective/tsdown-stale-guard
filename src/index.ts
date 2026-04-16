@@ -1,6 +1,6 @@
 export { checkBuildFreshness } from './check'
 export { parseLockFile, readLockFile, serializeLockFile } from './lockfile'
-export { tsdownLock } from './plugin'
+export { TsdownLock } from './plugin'
 export type {
   CheckChange,
   CheckOptions,

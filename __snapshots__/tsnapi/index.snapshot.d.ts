@@ -37,4 +37,4 @@ export declare function checkBuildFreshness(_?: CheckOptions): Promise<CheckResu
 export declare function parseLockFile(_: string): TsdownLockData;
 export declare function readLockFile(_: string): Promise<TsdownLockData>;
 export declare function serializeLockFile(_: TsdownLockData): string;
-export declare function tsdownLock(_?: TsdownLockPluginOptions): Plugin;
+export declare function TsdownLock(_?: TsdownLockPluginOptions): Plugin;

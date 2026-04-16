@@ -3,18 +3,18 @@ import { mkdir, mkdtemp, rm, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { describe, expect, it } from 'vitest'
-import { parseLockFile, serializeLockFile, tsdownLock } from '../src'
+import { parseLockFile, serializeLockFile, TsdownLock } from '../src'
 import { detectPackageLock, detectTsdownConfig, findUp } from '../src/detect'
 import { computeCompositeHash, hashFile } from '../src/hash'
 
-describe('tsdownLock', () => {
+describe('test TsdownLock', () => {
   it('exports plugin factory', () => {
-    const plugin = tsdownLock()
+    const plugin = TsdownLock()
     expect(plugin.name).toBe('tsdown-lock')
   })
 
   it('accepts custom options', () => {
-    const plugin = tsdownLock({
+    const plugin = TsdownLock({
       lockFile: 'custom.lock.yaml',
       hashOutputs: false,
     })

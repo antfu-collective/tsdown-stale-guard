@@ -29,12 +29,12 @@ npm i tsdown-lock
 ```ts
 // tsdown.config.ts
 import { defineConfig } from 'tsdown'
-import { tsdownLock } from 'tsdown-lock'
+import { TsdownLock } from 'tsdown-lock'
 
 export default defineConfig({
   entry: ['src/index.ts'],
   plugins: [
-    tsdownLock(),
+    TsdownLock(),
   ],
 })
 ```
@@ -63,7 +63,7 @@ outputs:
 ### Plugin Options
 
 ```ts
-tsdownLock({
+TsdownLock({
   lockFile: 'tsdown.lock.yaml', // lock file path (default)
   root: process.cwd(), // root directory (default)
   hashOutputs: true, // hash output files (default)
