@@ -1,11 +1,10 @@
-import type { Plugin } from 'rolldown'
+import type { TsdownPlugin } from 'tsdown'
 import type { TsdownStaleGuardEntry, TsdownStaleGuardPluginOptions } from './types'
 import { existsSync } from 'node:fs'
 import { readdir } from 'node:fs/promises'
 
 import { relative, resolve } from 'node:path'
-import process from 'node:process'
-import { detectPackageLock, detectTsdownConfig } from './detect'
+import { detectPackageLock } from './detect'
 import { computeCompositeHash, hashFile, hashFiles } from './hash'
 import { writeHashFile } from './lockfile'
 
@@ -15,7 +14,7 @@ const RE_NODE_MODULES = /node_modules/
 
 const DEFAULT_HASH_FILE = 'node_modules/.cache/tsdown-stale-guard/hash.yaml'
 
-export function TsdownStaleGuard(options: TsdownStaleGuardPluginOptions = {}): Plugin {
+export function TsdownStaleGuard(options: TsdownStaleGuardPluginOptions = {}): TsdownPlugin {
   const {
     hashFile: hashFilePath = DEFAULT_HASH_FILE,
     hashOutputs = true,
@@ -23,12 +22,18 @@ export function TsdownStaleGuard(options: TsdownStaleGuardPluginOptions = {}): P
 
   const sourceIds = new Set<string>()
   let root: string
+  let configDeps: Set<string> | undefined
+  let outDir: string
+  let isTsdownConfigResolvedCalled = false
 
   return {
     name: 'tsdown-stale-guard',
 
-    buildStart() {
-      root = options.root || process.cwd()
+    tsdownConfigResolved(config) {
+      isTsdownConfigResolvedCalled = true
+      root = options.root || config.cwd
+      configDeps = config.configDeps
+      outDir = config.outDir
     },
 
     transform: {
@@ -44,8 +49,10 @@ export function TsdownStaleGuard(options: TsdownStaleGuardPluginOptions = {}): P
       },
     },
 
-    async writeBundle(opts) {
-      const outDir = opts.dir || resolve(root, 'dist')
+    async writeBundle() {
+      if (!isTsdownConfigResolvedCalled)
+        throw new Error('tsdownConfigResolved is not being called correctly. `tsdown-stale-guard` requires `tsdown@0.21.9` or later, please check your tsdown version.')
+
       const resolvedHashFile = resolve(root, hashFilePath)
 
       // Hash source files (filter to files that exist — DTS pass may add virtual IDs)
@@ -65,12 +72,13 @@ export function TsdownStaleGuard(options: TsdownStaleGuardPluginOptions = {}): P
       }
 
       // Detect and hash config & lockfile
-      let config: TsdownStaleGuardEntry | undefined
-      const configPath = detectTsdownConfig(root)
-      if (configPath) {
-        const hash = await hashFile(configPath)
-        const file = toForwardSlash(relative(root, configPath))
-        config = { file, hash }
+      const configs: TsdownStaleGuardEntry[] = []
+      if (configDeps) {
+        for (const dep of configDeps) {
+          const hash = await hashFile(dep)
+          const file = toForwardSlash(relative(root, dep))
+          configs.push({ file, hash })
+        }
       }
 
       let lockfileEntry: TsdownStaleGuardEntry | undefined
@@ -85,7 +93,7 @@ export function TsdownStaleGuard(options: TsdownStaleGuardPluginOptions = {}): P
       const allEntries = [
         ...sources,
         ...outputs,
-        ...(config ? [config] : []),
+        ...configs,
         ...(lockfileEntry ? [lockfileEntry] : []),
       ]
       const compositeHash = computeCompositeHash(allEntries)
@@ -93,7 +101,7 @@ export function TsdownStaleGuard(options: TsdownStaleGuardPluginOptions = {}): P
       await writeHashFile(resolvedHashFile, {
         version: 1,
         hash: compositeHash,
-        config,
+        configs,
         lockfile: lockfileEntry,
         sources,
         outputs,

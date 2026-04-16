@@ -21,7 +21,6 @@ async function cleanFixture(name: string) {
 async function buildFixture(name: string, entry: string[] = ['src/index.ts']) {
   const dir = fixtureDir(name)
   await build({
-    config: false,
     cwd: dir,
     entry: entry.map(e => resolve(dir, e)),
     outDir: resolve(dir, 'dist'),
@@ -69,9 +68,9 @@ describe('basic fixture', () => {
     await buildFixture('basic')
 
     const data = await readHash('basic')
-    expect(data.config).toBeDefined()
-    expect(data.config!.file).toContain('tsdown.config.ts')
-    expect(data.config!.hash).toMatch(/^sha256:[a-f0-9]{64}$/)
+    expect(data.configs).toBeDefined()
+    expect(data.configs![0].file).toContain('tsdown.config.ts')
+    expect(data.configs![0].hash).toMatch(/^sha256:[a-f0-9]{64}$/)
   })
 
   it('detects package lock file', async () => {
@@ -89,7 +88,7 @@ describe('basic fixture', () => {
     const allEntries = [
       ...data.sources,
       ...data.outputs,
-      ...(data.config ? [data.config] : []),
+      ...data.configs || [],
       ...(data.lockfile ? [data.lockfile] : []),
     ]
     for (const entry of allEntries)

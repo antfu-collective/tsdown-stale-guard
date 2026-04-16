@@ -4,7 +4,7 @@ import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { describe, expect, it } from 'vitest'
 import { parseHashFile, serializeHashFile, TsdownStaleGuard } from '../src'
-import { detectPackageLock, detectTsdownConfig, findUp } from '../src/detect'
+import { detectPackageLock, findUp } from '../src/detect'
 import { computeCompositeHash, hashFile } from '../src/hash'
 
 describe('test TsdownStaleGuard', () => {
@@ -92,7 +92,7 @@ describe('hash file serialization', () => {
   const data: TsdownStaleGuardData = {
     version: 1,
     hash: 'sha256:composite123',
-    config: { file: 'tsdown.config.ts', hash: 'sha256:config123' },
+    configs: [{ file: 'tsdown.config.ts', hash: 'sha256:config123' }],
     lockfile: { file: '../../pnpm-lock.yaml', hash: 'sha256:lock123' },
     sources: [
       { file: 'src/index.ts', hash: 'sha256:src123' },
@@ -123,7 +123,7 @@ describe('hash file serialization', () => {
     }
     const serialized = serializeHashFile(minimal)
     const parsed = parseHashFile(serialized)
-    expect(parsed.config).toBeUndefined()
+    expect(parsed.configs).toEqual([])
     expect(parsed.lockfile).toBeUndefined()
     expect(parsed.sources).toEqual(minimal.sources)
     expect(parsed.outputs).toEqual([])
@@ -133,6 +133,7 @@ describe('hash file serialization', () => {
     const multi: TsdownStaleGuardData = {
       version: 1,
       hash: 'sha256:multi',
+      configs: [],
       sources: [
         { file: 'src/a.ts', hash: 'sha256:aaa' },
         { file: 'src/b.ts', hash: 'sha256:bbb' },
@@ -202,11 +203,5 @@ describe('detect', () => {
     const result = detectPackageLock(process.cwd())
     expect(result).toBeDefined()
     expect(result).toContain('pnpm-lock.yaml')
-  })
-
-  it('detectTsdownConfig finds tsdown.config.ts', () => {
-    const result = detectTsdownConfig(process.cwd())
-    expect(result).toBeDefined()
-    expect(result).toContain('tsdown.config.ts')
   })
 })

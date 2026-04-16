@@ -8,6 +8,8 @@
 
 Build freshness validation for [tsdown](https://github.com/rolldown/tsdown). Records hashes of all files involved in a build, enabling fast up-to-date checks without re-building.
 
+> This plugin requires `tsdown@0.21.9` or later.
+
 ## Features
 
 - **tsdown/Rolldown plugin** — automatically tracks source files, output files, config, and package lock file
