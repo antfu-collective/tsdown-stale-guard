@@ -135,7 +135,7 @@ Package lock files (`pnpm-lock.yaml`, `yarn.lock`, `package-lock.json`, `bun.loc
 [npm-downloads-href]: https://npmjs.com/package/tsdown-stale-guard
 [bundle-src]: https://img.shields.io/bundlephobia/minzip/tsdown-stale-guard?style=flat&colorA=080f12&colorB=1fa669&label=minzip
 [bundle-href]: https://bundlephobia.com/result?p=tsdown-stale-guard
-[license-src]: https://img.shields.io/github/license/antfu/tsdown-stale-guard.svg?style=flat&colorA=080f12&colorB=1fa669
-[license-href]: https://github.com/antfu/tsdown-stale-guard/blob/main/LICENSE
+[license-src]: https://img.shields.io/github/license/antfu-collective/tsdown-stale-guard.svg?style=flat&colorA=080f12&colorB=1fa669
+[license-href]: https://github.com/antfu-collective/tsdown-stale-guard/blob/main/LICENSE
 [jsdocs-src]: https://img.shields.io/badge/jsdocs-reference-080f12?style=flat&colorA=080f12&colorB=1fa669
 [jsdocs-href]: https://www.jsdocs.io/package/tsdown-stale-guard
