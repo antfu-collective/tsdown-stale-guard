@@ -39,7 +39,17 @@ export default defineConfig({
 })
 ```
 
-After building, a `tsdown.lock.yaml` file will be generated:
+After building, a `tsdown.lock.yaml` file will be generated.
+
+Since the lock file records hashes of your local dist build, it should not be committed to the repository.
+
+Add the following to your `.gitignore` file:
+
+```gitignore
+**/tsdown.lock.yaml
+```
+
+Example of the generated lock file:
 
 ```yaml
 version: 1
