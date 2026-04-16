@@ -1,20 +1,20 @@
-import type { TsdownStaleGuardData } from '../src/types'
+import type { StaleGuardData } from '../src/types'
 import { mkdir, mkdtemp, rm, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { describe, expect, it } from 'vitest'
-import { parseHashFile, serializeHashFile, TsdownStaleGuard } from '../src'
+import { parseHashFile, serializeHashFile, StaleGuardRecorder } from '../src'
 import { detectPackageLock, findUp } from '../src/detect'
 import { computeCompositeHash, hashFile } from '../src/hash'
 
-describe('test TsdownStaleGuard', () => {
+describe('test StaleGuardRecorder', () => {
   it('exports plugin factory', () => {
-    const plugin = TsdownStaleGuard()
+    const plugin = StaleGuardRecorder()
     expect(plugin.name).toBe('tsdown-stale-guard')
   })
 
   it('accepts custom options', () => {
-    const plugin = TsdownStaleGuard({
+    const plugin = StaleGuardRecorder({
       hashFile: 'custom.hash.yaml',
       hashOutputs: false,
     })
@@ -89,7 +89,7 @@ describe('computeCompositeHash', () => {
 })
 
 describe('hash file serialization', () => {
-  const data: TsdownStaleGuardData = {
+  const data: StaleGuardData = {
     version: 1,
     hash: 'sha256:composite123',
     configs: [{ file: 'tsdown.config.ts', hash: 'sha256:config123' }],
@@ -115,7 +115,7 @@ describe('hash file serialization', () => {
   })
 
   it('handles missing optional fields', () => {
-    const minimal: TsdownStaleGuardData = {
+    const minimal: StaleGuardData = {
       version: 1,
       hash: 'sha256:minimal',
       sources: [{ file: 'src/index.ts', hash: 'sha256:aaa' }],
@@ -130,7 +130,7 @@ describe('hash file serialization', () => {
   })
 
   it('preserves multiple sources sorted', () => {
-    const multi: TsdownStaleGuardData = {
+    const multi: StaleGuardData = {
       version: 1,
       hash: 'sha256:multi',
       configs: [],

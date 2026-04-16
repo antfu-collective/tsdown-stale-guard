@@ -3,7 +3,7 @@ import { readFile, rm, writeFile } from 'node:fs/promises'
 import { resolve } from 'node:path'
 import { build } from 'tsdown'
 import { afterEach, describe, expect, it } from 'vitest'
-import { checkBuildFreshness, parseHashFile, TsdownStaleGuard } from '../src'
+import { checkBuildState, parseHashFile, StaleGuardRecorder } from '../src'
 
 const fixtures = resolve(import.meta.dirname, 'fixtures')
 const HASH_FILE = 'node_modules/.cache/tsdown-stale-guard/hash.yaml'
@@ -24,7 +24,7 @@ async function buildFixture(name: string, entry: string[] = ['src/index.ts']) {
     cwd: dir,
     entry: entry.map(e => resolve(dir, e)),
     outDir: resolve(dir, 'dist'),
-    plugins: [TsdownStaleGuard({ root: dir })],
+    plugins: [StaleGuardRecorder({ root: dir })],
   })
 }
 
@@ -140,7 +140,7 @@ describe('freshness check', () => {
   it('reports fresh immediately after build', async () => {
     await buildFixture('basic')
 
-    const result = await checkBuildFreshness({
+    const result = await checkBuildState({
       root: fixtureDir('basic'),
     })
     expect(result.fresh).toBe(true)
@@ -157,7 +157,7 @@ describe('freshness check', () => {
     await writeFile(srcFile, `${original}\nexport const added = true\n`)
 
     try {
-      const result = await checkBuildFreshness({ root: dir })
+      const result = await checkBuildState({ root: dir })
       expect(result.fresh).toBe(false)
       expect(result.changes.length).toBeGreaterThan(0)
       expect(result.changes.some(c => c.type === 'changed' && c.category === 'source')).toBe(true)
@@ -175,7 +175,7 @@ describe('freshness check', () => {
     // Delete dist
     await rm(resolve(dir, 'dist'), { recursive: true })
 
-    const result = await checkBuildFreshness({ root: dir })
+    const result = await checkBuildState({ root: dir })
     expect(result.fresh).toBe(false)
     expect(result.changes.some(c => c.type === 'removed' && c.category === 'output')).toBe(true)
   })
@@ -189,7 +189,7 @@ describe('freshness check', () => {
     await writeFile(configFile, `${original}\n// modified\n`)
 
     try {
-      const result = await checkBuildFreshness({ root: dir })
+      const result = await checkBuildState({ root: dir })
       expect(result.fresh).toBe(false)
       expect(result.changes.some(c => c.type === 'changed' && c.category === 'config')).toBe(true)
     }

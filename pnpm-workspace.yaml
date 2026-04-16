@@ -1,5 +1,4 @@
 catalogMode: prefer
-
 ignoreWorkspaceRootCheck: true
 shellEmulator: true
 trustPolicy: no-downgrade
@@ -8,8 +7,7 @@ packages:
   - docs
   - packages/*
   - examples/*
-catalog:
-  yaml: ^2.8.3
+
 catalogs:
   cli:
     '@antfu/eslint-config': ^8.2.0
@@ -25,8 +23,11 @@ catalogs:
     vite: ^8.0.8
   inlined:
     '@antfu/utils': ^9.3.0
+  prod:
+    cac: ^7.0.0
+    yaml: ^2.8.3
   testing:
-    tsnapi: ^0.2.1
+    tsnapi: ^0.3.0
     vitest: ^4.1.4
   types:
     '@types/node': ^25.6.0

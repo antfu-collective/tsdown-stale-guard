@@ -1,4 +1,4 @@
-import type { TsdownStaleGuardEntry } from './types'
+import type { StaleGuardEntry } from './types'
 import { createHash } from 'node:crypto'
 import { readFile } from 'node:fs/promises'
 import { relative } from 'node:path'
@@ -8,7 +8,7 @@ export async function hashFile(path: string): Promise<string> {
   return `sha256:${createHash('sha256').update(content).digest('hex')}`
 }
 
-export async function hashFiles(paths: string[], root: string): Promise<TsdownStaleGuardEntry[]> {
+export async function hashFiles(paths: string[], root: string): Promise<StaleGuardEntry[]> {
   const entries = await Promise.all(
     paths.map(async (p) => {
       const hash = await hashFile(p)
@@ -19,7 +19,7 @@ export async function hashFiles(paths: string[], root: string): Promise<TsdownSt
   return entries.sort((a, b) => a.file.localeCompare(b.file))
 }
 
-export function computeCompositeHash(entries: TsdownStaleGuardEntry[]): string {
+export function computeCompositeHash(entries: StaleGuardEntry[]): string {
   const hash = createHash('sha256')
   for (const entry of [...entries].sort((a, b) => a.file.localeCompare(b.file))) {
     hash.update(`${entry.file}:${entry.hash}\n`)

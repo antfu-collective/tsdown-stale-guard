@@ -48,7 +48,8 @@
     "tsdown": "^0.21.9"
   },
   "dependencies": {
-    "yaml": "catalog:"
+    "cac": "catalog:prod",
+    "yaml": "catalog:prod"
   },
   "devDependencies": {
     "@antfu/eslint-config": "catalog:cli",

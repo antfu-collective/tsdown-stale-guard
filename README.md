@@ -15,8 +15,8 @@ Build freshness validation for [tsdown](https://github.com/rolldown/tsdown). Rec
 - **tsdown/Rolldown plugin** — automatically tracks source files, output files, config, and package lock file
 - **Composite hash** — single hash for quick freshness checks
 - **Find-up search** — detects lock files and configs in monorepo setups
-- **CLI** — `tsdown-stale-guard check` for CI pipelines
-- **Programmatic API** — `checkBuildFreshness()` for tool integrations
+- **CLI** — `tsdown-stale-guard` for CI pipelines
+- **Programmatic API** — `checkBuildState()` for tool integrations
 
 ## Install
 
@@ -31,17 +31,17 @@ npm i tsdown-stale-guard
 ```ts
 // tsdown.config.ts
 import { defineConfig } from 'tsdown'
-import { TsdownStaleGuard } from 'tsdown-stale-guard'
+import { StaleGuardRecorder } from 'tsdown-stale-guard'
 
 export default defineConfig({
   entry: ['src/index.ts'],
   plugins: [
-    TsdownStaleGuard(),
+    StaleGuardRecorder(),
   ],
 })
 ```
 
-After building, a hash file will be generated at `node_modules/.cache/tsdown-stale-guard/hash.yaml`. Since it lives inside `node_modules`, it does not need to be gitignored.
+After building, a hash file will be generated at `node_modules/.cache/tsdown-stale-guard/hash.yaml`.
 
 Example of the generated hash file:
 
@@ -67,7 +67,7 @@ outputs:
 ### Plugin Options
 
 ```ts
-TsdownStaleGuard({
+StaleGuardRecorder({
   hashFile: 'node_modules/.cache/tsdown-stale-guard/hash.yaml', // hash file path (default)
   root: process.cwd(), // root directory (default)
   hashOutputs: true, // hash output files (default)
@@ -78,10 +78,10 @@ TsdownStaleGuard({
 
 ```bash
 # Check if the build is up to date
-tsdown-stale-guard check
+tsdown-stale-guard
 
 # Use a custom hash file path
-tsdown-stale-guard check --hash-file custom.hash.yaml
+tsdown-stale-guard --hash-file custom.hash.yaml
 ```
 
 Exit code `0` if fresh, `1` if stale.
@@ -89,9 +89,9 @@ Exit code `0` if fresh, `1` if stale.
 ### Programmatic API
 
 ```ts
-import { checkBuildFreshness } from 'tsdown-stale-guard'
+import { checkBuildState } from 'tsdown-stale-guard'
 
-const result = await checkBuildFreshness()
+const result = await checkBuildState()
 
 if (result.fresh) {
   console.log('Build is up to date')

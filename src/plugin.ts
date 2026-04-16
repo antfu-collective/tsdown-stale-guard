@@ -1,5 +1,5 @@
 import type { TsdownPlugin } from 'tsdown'
-import type { TsdownStaleGuardEntry, TsdownStaleGuardPluginOptions } from './types'
+import type { StaleGuardEntry, StaleGuardRecorderOptions } from './types'
 import { existsSync } from 'node:fs'
 import { readdir } from 'node:fs/promises'
 
@@ -14,7 +14,7 @@ const RE_NODE_MODULES = /node_modules/
 
 const DEFAULT_HASH_FILE = 'node_modules/.cache/tsdown-stale-guard/hash.yaml'
 
-export function TsdownStaleGuard(options: TsdownStaleGuardPluginOptions = {}): TsdownPlugin {
+export function StaleGuardRecorder(options: StaleGuardRecorderOptions = {}): TsdownPlugin {
   const {
     hashFile: hashFilePath = DEFAULT_HASH_FILE,
     hashOutputs = true,
@@ -60,7 +60,7 @@ export function TsdownStaleGuard(options: TsdownStaleGuardPluginOptions = {}): T
       const sources = await hashFiles(existingSources, root)
 
       // Hash output files by scanning the output directory
-      let outputs: TsdownStaleGuardEntry[] = []
+      let outputs: StaleGuardEntry[] = []
       if (hashOutputs && existsSync(outDir)) {
         const files = await readdir(outDir, { recursive: true, withFileTypes: true })
         const outputPaths: string[] = []
@@ -72,7 +72,7 @@ export function TsdownStaleGuard(options: TsdownStaleGuardPluginOptions = {}): T
       }
 
       // Detect and hash config & lockfile
-      const configs: TsdownStaleGuardEntry[] = []
+      const configs: StaleGuardEntry[] = []
       if (configDeps) {
         for (const dep of configDeps) {
           const hash = await hashFile(dep)
@@ -81,7 +81,7 @@ export function TsdownStaleGuard(options: TsdownStaleGuardPluginOptions = {}): T
         }
       }
 
-      let lockfileEntry: TsdownStaleGuardEntry | undefined
+      let lockfileEntry: StaleGuardEntry | undefined
       const lockfilePath = detectPackageLock(root)
       if (lockfilePath) {
         const hash = await hashFile(lockfilePath)

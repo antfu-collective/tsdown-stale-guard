@@ -1,6 +1,6 @@
 import { defineConfig } from 'tsdown'
 import ApiSnapshot from 'tsnapi/rolldown'
-import { TsdownStaleGuard } from './src/index.ts'
+import { StaleGuardRecorder } from './src/index.ts'
 
 export default defineConfig({
   entry: [
@@ -12,7 +12,7 @@ export default defineConfig({
   publint: true,
   plugins: [
     ApiSnapshot(),
-    TsdownStaleGuard(),
+    StaleGuardRecorder(),
   ],
   deps: {
     onlyBundle: [],

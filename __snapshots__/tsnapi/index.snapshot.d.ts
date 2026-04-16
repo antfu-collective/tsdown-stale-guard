@@ -12,29 +12,30 @@ export interface CheckOptions {
 }
 export interface CheckResult {
   fresh: boolean;
+  stale: boolean;
   changes: CheckChange[];
 }
-export interface TsdownStaleGuardData {
+export interface StaleGuardData {
   version: 1;
   hash: string;
-  configs?: TsdownStaleGuardEntry[];
-  lockfile?: TsdownStaleGuardEntry;
-  sources: TsdownStaleGuardEntry[];
-  outputs: TsdownStaleGuardEntry[];
+  configs?: StaleGuardEntry[];
+  lockfile?: StaleGuardEntry;
+  sources: StaleGuardEntry[];
+  outputs: StaleGuardEntry[];
 }
-export interface TsdownStaleGuardEntry {
+export interface StaleGuardEntry {
   file: string;
   hash: string;
 }
-export interface TsdownStaleGuardPluginOptions {
+export interface StaleGuardRecorderOptions {
   hashFile?: string;
   root?: string;
   hashOutputs?: boolean;
 }
 
 // Functions
-export declare function checkBuildFreshness(_?: CheckOptions): Promise<CheckResult>;
-export declare function parseHashFile(_: string): TsdownStaleGuardData;
-export declare function readHashFile(_: string): Promise<TsdownStaleGuardData>;
-export declare function serializeHashFile(_: TsdownStaleGuardData): string;
-export declare function TsdownStaleGuard(_?: TsdownStaleGuardPluginOptions): TsdownPlugin;
+export declare function checkBuildState(_?: CheckOptions): Promise<CheckResult>;
+export declare function parseHashFile(_: string): StaleGuardData;
+export declare function readHashFile(_: string): Promise<StaleGuardData>;
+export declare function serializeHashFile(_: StaleGuardData): string;
+export declare function StaleGuardRecorder(_?: StaleGuardRecorderOptions): TsdownPlugin;

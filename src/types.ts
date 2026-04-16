@@ -1,19 +1,20 @@
-export interface TsdownStaleGuardEntry {
+export interface StaleGuardEntry {
   file: string
   hash: string
 }
 
-export interface TsdownStaleGuardData {
+export interface StaleGuardData {
   version: 1
   hash: string
-  configs?: TsdownStaleGuardEntry[]
-  lockfile?: TsdownStaleGuardEntry
-  sources: TsdownStaleGuardEntry[]
-  outputs: TsdownStaleGuardEntry[]
+  configs?: StaleGuardEntry[]
+  lockfile?: StaleGuardEntry
+  sources: StaleGuardEntry[]
+  outputs: StaleGuardEntry[]
 }
 
 export interface CheckResult {
   fresh: boolean
+  stale: boolean
   changes: CheckChange[]
 }
 
@@ -23,7 +24,7 @@ export interface CheckChange {
   file: string
 }
 
-export interface TsdownStaleGuardPluginOptions {
+export interface StaleGuardRecorderOptions {
   /**
    * Path to the hash file.
    * @default 'node_modules/.cache/tsdown-stale-guard/hash.yaml'
