@@ -1,7 +1,7 @@
 import type { Plugin } from 'rolldown'
 import type { TsdownLockEntry, TsdownLockPluginOptions } from './types'
 import { existsSync } from 'node:fs'
-import { readdir, stat } from 'node:fs/promises'
+import { readdir } from 'node:fs/promises'
 
 import { relative, resolve } from 'node:path'
 import process from 'node:process'
@@ -53,13 +53,11 @@ export function TsdownLock(options: TsdownLockPluginOptions = {}): Plugin {
       // Hash output files by scanning the output directory
       let outputs: TsdownLockEntry[] = []
       if (hashOutputs && existsSync(outDir)) {
-        const files = await readdir(outDir, { recursive: true })
+        const files = await readdir(outDir, { recursive: true, withFileTypes: true })
         const outputPaths: string[] = []
-        for (const f of files) {
-          const p = resolve(outDir, f)
-          const s = await stat(p)
-          if (s.isFile())
-            outputPaths.push(p)
+        for (const file of files) {
+          if (file.isFile())
+            outputPaths.push(resolve(file.parentPath, file.name))
         }
         outputs = await hashFiles(outputPaths, root)
       }
