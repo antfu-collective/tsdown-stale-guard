@@ -6,7 +6,7 @@ export interface TsdownStaleGuardEntry {
 export interface TsdownStaleGuardData {
   version: 1
   hash: string
-  config?: TsdownStaleGuardEntry
+  configs?: TsdownStaleGuardEntry[]
   lockfile?: TsdownStaleGuardEntry
   sources: TsdownStaleGuardEntry[]
   outputs: TsdownStaleGuardEntry[]

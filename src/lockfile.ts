@@ -11,8 +11,11 @@ export function serializeHashFile(data: TsdownStaleGuardData): string {
     hash: data.hash,
   }
 
-  if (data.config)
-    obj.config = { [data.config.file]: data.config.hash }
+  if (data.configs) {
+    obj.configs = Object.fromEntries(
+      data.configs.map(e => [e.file, e.hash]),
+    )
+  }
 
   if (data.lockfile)
     obj.lockfile = { [data.lockfile.file]: data.lockfile.hash }
@@ -38,7 +41,7 @@ export function parseHashFile(content: string): TsdownStaleGuardData {
   return {
     version: obj.version as 1,
     hash: obj.hash as string,
-    config: parseSection(obj.config as Record<string, string> | undefined),
+    configs: parseSectionList(obj.configs as Record<string, string> | undefined),
     lockfile: parseSection(obj.lockfile as Record<string, string> | undefined),
     sources: parseSectionList(obj.sources as Record<string, string> | undefined),
     outputs: parseSectionList(obj.outputs as Record<string, string> | undefined),

@@ -15,8 +15,6 @@ export default defineConfig({
     TsdownStaleGuard(),
   ],
   deps: {
-    neverBundle: [
-      'rolldown',
-    ],
+    onlyBundle: [],
   },
 })

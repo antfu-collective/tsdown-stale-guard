@@ -14,9 +14,12 @@ export async function checkBuildFreshness(options: CheckOptions = {}): Promise<C
   const data = await readHashFile(hashFilePath)
   const changes: CheckChange[] = []
 
-  // Check config
-  if (data.config)
-    await checkEntry(data.config, 'config', root, changes)
+  // Check configs
+  if (data.configs) {
+    for (const entry of data.configs) {
+      await checkEntry(entry, 'config', root, changes)
+    }
+  }
 
   // Check lockfile
   if (data.lockfile)
@@ -34,7 +37,7 @@ export async function checkBuildFreshness(options: CheckOptions = {}): Promise<C
   const allEntries = [
     ...data.sources,
     ...data.outputs,
-    ...(data.config ? [data.config] : []),
+    ...data.configs || [],
     ...(data.lockfile ? [data.lockfile] : []),
   ]
   const currentHash = computeCompositeHash(allEntries)

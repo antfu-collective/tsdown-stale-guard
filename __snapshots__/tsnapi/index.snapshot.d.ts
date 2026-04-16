@@ -17,7 +17,7 @@ export interface CheckResult {
 export interface TsdownStaleGuardData {
   version: 1;
   hash: string;
-  config?: TsdownStaleGuardEntry;
+  configs?: TsdownStaleGuardEntry[];
   lockfile?: TsdownStaleGuardEntry;
   sources: TsdownStaleGuardEntry[];
   outputs: TsdownStaleGuardEntry[];
@@ -37,4 +37,4 @@ export declare function checkBuildFreshness(_?: CheckOptions): Promise<CheckResu
 export declare function parseHashFile(_: string): TsdownStaleGuardData;
 export declare function readHashFile(_: string): Promise<TsdownStaleGuardData>;
 export declare function serializeHashFile(_: TsdownStaleGuardData): string;
-export declare function TsdownStaleGuard(_?: TsdownStaleGuardPluginOptions): Plugin;
+export declare function TsdownStaleGuard(_?: TsdownStaleGuardPluginOptions): TsdownPlugin;

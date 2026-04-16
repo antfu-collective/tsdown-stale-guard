@@ -9,16 +9,6 @@ const PACKAGE_LOCK_FILES = [
   'bun.lock',
 ]
 
-const TSDOWN_CONFIG_FILES = [
-  'tsdown.config.ts',
-  'tsdown.config.mts',
-  'tsdown.config.cts',
-  'tsdown.config.js',
-  'tsdown.config.mjs',
-  'tsdown.config.cjs',
-  'tsdown.config.json',
-]
-
 export function findUp(names: string[], cwd: string): string | undefined {
   let dir = resolve(cwd)
 
@@ -38,8 +28,4 @@ export function findUp(names: string[], cwd: string): string | undefined {
 
 export function detectPackageLock(cwd: string): string | undefined {
   return findUp(PACKAGE_LOCK_FILES, cwd)
-}
-
-export function detectTsdownConfig(cwd: string): string | undefined {
-  return findUp(TSDOWN_CONFIG_FILES, cwd)
 }

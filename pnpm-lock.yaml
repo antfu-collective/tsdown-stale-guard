@@ -28,7 +28,7 @@ catalogs:
       specifier: ^2.13.1
       version: 2.13.1
     tsdown:
-      specifier: ^0.21.8
+      specifier: https://pkg.pr.new/tsdown@271b8f3
       version: 0.21.8
     tsx:
       specifier: ^4.21.0
@@ -40,9 +40,6 @@ catalogs:
       specifier: ^8.0.8
       version: 8.0.8
   default:
-    rolldown:
-      specifier: 1.0.0-rc.15
-      version: 1.0.0-rc.15
     yaml:
       specifier: ^2.8.3
       version: 2.8.3
@@ -94,15 +91,12 @@ importers:
       publint:
         specifier: catalog:cli
         version: 0.3.18
-      rolldown:
-        specifier: 'catalog:'
-        version: 1.0.0-rc.15
       simple-git-hooks:
         specifier: catalog:cli
         version: 2.13.1
       tsdown:
         specifier: catalog:cli
-        version: 0.21.8(publint@0.3.18)(synckit@0.11.12)(typescript@6.0.2)
+        version: https://pkg.pr.new/tsdown@271b8f3(publint@0.3.18)(synckit@0.11.12)(typescript@6.0.2)
       tsnapi:
         specifier: catalog:testing
         version: 0.2.1(vitest@4.1.4(@types/node@25.6.0)(vite@8.0.8(@types/node@25.6.0)(esbuild@0.27.1)(jiti@2.6.1)(tsx@4.21.0)(yaml@2.8.3)))
@@ -1507,8 +1501,8 @@ packages:
     resolution: {integrity: sha512-Hs59xBNfUIunMFgWAbGX5cq6893IbWg4KnrjbYwX3tx0ztorVgTDA6B2sxf8ejHJ4wz8BqGUMYlnzNBer5NvGg==}
     engines: {node: '>= 4'}
 
-  import-without-cache@0.2.5:
-    resolution: {integrity: sha512-B6Lc2s6yApwnD2/pMzFh/d5AVjdsDXjgkeJ766FmFuJELIGHNycKRj+l3A39yZPM4CchqNCB4RITEAYB1KUM6A==}
+  import-without-cache@0.3.3:
+    resolution: {integrity: sha512-bDxwDdF04gm550DfZHgffvlX+9kUlcz32UD0AeBTmVPFiWkrexF2XVmiuFFbDhiFuP8fQkrkvI2KdSNPYWAXkQ==}
     engines: {node: '>=20.19.0'}
 
   imurmurhash@0.1.4:
@@ -2140,8 +2134,9 @@ packages:
     peerDependencies:
       typescript: '>=4.0.0'
 
-  tsdown@0.21.8:
-    resolution: {integrity: sha512-rHDIER4JU5owYTWptvyDk6pwfA5lCft1P+11HLGeF0uj0CB7vopFvr/E8QOaRmegeyHIEsu4+03j7ysvdgBAVA==}
+  tsdown@https://pkg.pr.new/tsdown@271b8f3:
+    resolution: {integrity: sha512-zIMxoI4flZ4Z85LBlTFN/xCekmy17Az2A5YfWLz7D1/czOPPkSN1BHndYvT8KLFciMrb1RD1J0Hy6MdisWNRWQ==, tarball: https://pkg.pr.new/tsdown@271b8f3}
+    version: 0.21.8
     engines: {node: '>=20.19.0'}
     hasBin: true
     peerDependencies:
@@ -3659,7 +3654,7 @@ snapshots:
 
   ignore@7.0.5: {}
 
-  import-without-cache@0.2.5: {}
+  import-without-cache@0.3.3: {}
 
   imurmurhash@0.1.4: {}
 
@@ -4463,14 +4458,14 @@ snapshots:
       picomatch: 4.0.4
       typescript: 6.0.2
 
-  tsdown@0.21.8(publint@0.3.18)(synckit@0.11.12)(typescript@6.0.2):
+  tsdown@https://pkg.pr.new/tsdown@271b8f3(publint@0.3.18)(synckit@0.11.12)(typescript@6.0.2):
     dependencies:
       ansis: 4.2.0
       cac: 7.0.0
       defu: 6.1.7
       empathic: 2.0.0
       hookable: 6.1.1
-      import-without-cache: 0.2.5
+      import-without-cache: 0.3.3
       obug: 2.1.1
       picomatch: 4.0.4
       rolldown: 1.0.0-rc.15
