@@ -1,18 +1,20 @@
 import process from 'node:process'
 import { defineConfig } from 'tsdown'
 import ApiSnapshot from 'tsnapi/rolldown'
+import { tsdownLock } from './src/index.ts'
 
 export default defineConfig({
   entry: [
     'src/index.ts',
+    'src/cli.ts',
   ],
   dts: true,
   exports: true,
   publint: true,
   plugins: [
     ApiSnapshot({
-      // TODO: remove this when the library is stable to guard against breaking changes
       update: !process.env.CI,
     }),
+    tsdownLock(),
   ],
 })

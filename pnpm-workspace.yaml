@@ -1,14 +1,16 @@
 catalogMode: prefer
+
 ignoreWorkspaceRootCheck: true
 shellEmulator: true
 trustPolicy: no-downgrade
-
 packages:
   - playground
   - docs
   - packages/*
   - examples/*
-
+catalog:
+  rolldown: 1.0.0-rc.15
+  yaml: ^2.8.3
 catalogs:
   cli:
     '@antfu/eslint-config': ^8.1.1
