@@ -19,7 +19,7 @@ catalogs:
     lint-staged: ^16.4.0
     publint: ^0.3.18
     simple-git-hooks: ^2.13.1
-    tsdown: https://pkg.pr.new/tsdown@271b8f3
+    tsdown: ^0.21.9
     tsx: ^4.21.0
     typescript: ^6.0.2
     vite: ^8.0.8

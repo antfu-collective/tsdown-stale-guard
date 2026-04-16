@@ -24,11 +24,13 @@ export function TsdownStaleGuard(options: TsdownStaleGuardPluginOptions = {}): T
   let root: string
   let configDeps: Set<string> | undefined
   let outDir: string
+  let isTsdownConfigResolvedCalled = false
 
   return {
     name: 'tsdown-stale-guard',
 
     tsdownConfigResolved(config) {
+      isTsdownConfigResolvedCalled = true
       root = options.root || config.cwd
       configDeps = config.configDeps
       outDir = config.outDir
@@ -48,6 +50,9 @@ export function TsdownStaleGuard(options: TsdownStaleGuardPluginOptions = {}): T
     },
 
     async writeBundle() {
+      if (!isTsdownConfigResolvedCalled)
+        throw new Error('tsdownConfigResolved is not being called correctly. `tsdown-stale-guard` requires `tsdown@0.21.9` or later, please check your tsdown version.')
+
       const resolvedHashFile = resolve(root, hashFilePath)
 
       // Hash source files (filter to files that exist — DTS pass may add virtual IDs)

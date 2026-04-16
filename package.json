@@ -45,7 +45,7 @@
     "prepare": "simple-git-hooks"
   },
   "peerDependencies": {
-    "tsdown": "^0.21.8"
+    "tsdown": "^0.21.9"
   },
   "dependencies": {
     "yaml": "catalog:"
