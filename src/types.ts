@@ -1,15 +1,15 @@
-export interface TsdownLockEntry {
+export interface TsdownStaleGuardEntry {
   file: string
   hash: string
 }
 
-export interface TsdownLockData {
+export interface TsdownStaleGuardData {
   version: 1
   hash: string
-  config?: TsdownLockEntry
-  lockfile?: TsdownLockEntry
-  sources: TsdownLockEntry[]
-  outputs: TsdownLockEntry[]
+  config?: TsdownStaleGuardEntry
+  lockfile?: TsdownStaleGuardEntry
+  sources: TsdownStaleGuardEntry[]
+  outputs: TsdownStaleGuardEntry[]
 }
 
 export interface CheckResult {
@@ -23,12 +23,12 @@ export interface CheckChange {
   file: string
 }
 
-export interface TsdownLockPluginOptions {
+export interface TsdownStaleGuardPluginOptions {
   /**
-   * Path to the lock file.
-   * @default 'tsdown.lock.yaml'
+   * Path to the hash file.
+   * @default 'node_modules/.cache/tsdown-stale-guard/hash.yaml'
    */
-  lockFile?: string
+  hashFile?: string
   /**
    * Root directory for resolving relative paths.
    * @default process.cwd()
@@ -43,10 +43,10 @@ export interface TsdownLockPluginOptions {
 
 export interface CheckOptions {
   /**
-   * Path to the lock file.
-   * @default 'tsdown.lock.yaml'
+   * Path to the hash file.
+   * @default 'node_modules/.cache/tsdown-stale-guard/hash.yaml'
    */
-  lockFile?: string
+  hashFile?: string
   /**
    * Root directory for resolving relative paths.
    * @default process.cwd()

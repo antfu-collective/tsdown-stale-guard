@@ -1,4 +1,4 @@
-# tsdown-lock
+# tsdown-stale-guard
 
 [![npm version][npm-version-src]][npm-version-href]
 [![npm downloads][npm-downloads-src]][npm-downloads-href]
@@ -6,20 +6,20 @@
 [![JSDocs][jsdocs-src]][jsdocs-href]
 [![License][license-src]][license-href]
 
-Build freshness validation for [tsdown](https://github.com/rolldown/tsdown). Generates a lock file recording hashes of all files involved in a build, enabling fast up-to-date checks without re-building.
+Build freshness validation for [tsdown](https://github.com/rolldown/tsdown). Records hashes of all files involved in a build, enabling fast up-to-date checks without re-building.
 
 ## Features
 
 - **tsdown/Rolldown plugin** — automatically tracks source files, output files, config, and package lock file
 - **Composite hash** — single hash for quick freshness checks
 - **Find-up search** — detects lock files and configs in monorepo setups
-- **CLI** — `tsdown-lock check` for CI pipelines
+- **CLI** — `tsdown-stale-guard check` for CI pipelines
 - **Programmatic API** — `checkBuildFreshness()` for tool integrations
 
 ## Install
 
 ```bash
-npm i tsdown-lock
+npm i tsdown-stale-guard
 ```
 
 ## Usage
@@ -29,27 +29,19 @@ npm i tsdown-lock
 ```ts
 // tsdown.config.ts
 import { defineConfig } from 'tsdown'
-import { TsdownLock } from 'tsdown-lock'
+import { TsdownStaleGuard } from 'tsdown-stale-guard'
 
 export default defineConfig({
   entry: ['src/index.ts'],
   plugins: [
-    TsdownLock(),
+    TsdownStaleGuard(),
   ],
 })
 ```
 
-After building, a `tsdown.lock.yaml` file will be generated.
+After building, a hash file will be generated at `node_modules/.cache/tsdown-stale-guard/hash.yaml`. Since it lives inside `node_modules`, it does not need to be gitignored.
 
-Since the lock file records hashes of your local dist build, it should not be committed to the repository.
-
-Add the following to your `.gitignore` file:
-
-```gitignore
-**/tsdown.lock.yaml
-```
-
-Example of the generated lock file:
+Example of the generated hash file:
 
 ```yaml
 version: 1
@@ -73,8 +65,8 @@ outputs:
 ### Plugin Options
 
 ```ts
-TsdownLock({
-  lockFile: 'tsdown.lock.yaml', // lock file path (default)
+TsdownStaleGuard({
+  hashFile: 'node_modules/.cache/tsdown-stale-guard/hash.yaml', // hash file path (default)
   root: process.cwd(), // root directory (default)
   hashOutputs: true, // hash output files (default)
 })
@@ -84,10 +76,10 @@ TsdownLock({
 
 ```bash
 # Check if the build is up to date
-tsdown-lock check
+tsdown-stale-guard check
 
-# Use a custom lock file path
-tsdown-lock check --lock-file custom.lock.yaml
+# Use a custom hash file path
+tsdown-stale-guard check --hash-file custom.hash.yaml
 ```
 
 Exit code `0` if fresh, `1` if stale.
@@ -95,7 +87,7 @@ Exit code `0` if fresh, `1` if stale.
 ### Programmatic API
 
 ```ts
-import { checkBuildFreshness } from 'tsdown-lock'
+import { checkBuildFreshness } from 'tsdown-stale-guard'
 
 const result = await checkBuildFreshness()
 
@@ -115,9 +107,9 @@ The plugin hooks into Rolldown's build pipeline:
 
 1. **`transform`** — collects all source file paths during bundling
 2. **`generateBundle`** — collects output file names
-3. **`writeBundle`** — hashes all collected files plus the detected tsdown config and package lock file, then writes `tsdown.lock.yaml`
+3. **`writeBundle`** — hashes all collected files plus the detected tsdown config and package lock file, then writes the hash file
 
-The lock file includes a composite `hash` computed from all individual file hashes, enabling a single-comparison freshness check.
+The hash file includes a composite `hash` computed from all individual file hashes, enabling a single-comparison freshness check.
 
 Package lock files (`pnpm-lock.yaml`, `yarn.lock`, `package-lock.json`, `bun.lockb`, `bun.lock`) and tsdown config files are found via find-up search, supporting monorepo setups where they may live in a parent directory.
 
@@ -135,13 +127,13 @@ Package lock files (`pnpm-lock.yaml`, `yarn.lock`, `package-lock.json`, `bun.loc
 
 <!-- Badges -->
 
-[npm-version-src]: https://img.shields.io/npm/v/tsdown-lock?style=flat&colorA=080f12&colorB=1fa669
-[npm-version-href]: https://npmjs.com/package/tsdown-lock
-[npm-downloads-src]: https://img.shields.io/npm/dm/tsdown-lock?style=flat&colorA=080f12&colorB=1fa669
-[npm-downloads-href]: https://npmjs.com/package/tsdown-lock
-[bundle-src]: https://img.shields.io/bundlephobia/minzip/tsdown-lock?style=flat&colorA=080f12&colorB=1fa669&label=minzip
-[bundle-href]: https://bundlephobia.com/result?p=tsdown-lock
-[license-src]: https://img.shields.io/github/license/antfu/tsdown-lock.svg?style=flat&colorA=080f12&colorB=1fa669
-[license-href]: https://github.com/antfu/tsdown-lock/blob/main/LICENSE
+[npm-version-src]: https://img.shields.io/npm/v/tsdown-stale-guard?style=flat&colorA=080f12&colorB=1fa669
+[npm-version-href]: https://npmjs.com/package/tsdown-stale-guard
+[npm-downloads-src]: https://img.shields.io/npm/dm/tsdown-stale-guard?style=flat&colorA=080f12&colorB=1fa669
+[npm-downloads-href]: https://npmjs.com/package/tsdown-stale-guard
+[bundle-src]: https://img.shields.io/bundlephobia/minzip/tsdown-stale-guard?style=flat&colorA=080f12&colorB=1fa669&label=minzip
+[bundle-href]: https://bundlephobia.com/result?p=tsdown-stale-guard
+[license-src]: https://img.shields.io/github/license/antfu/tsdown-stale-guard.svg?style=flat&colorA=080f12&colorB=1fa669
+[license-href]: https://github.com/antfu/tsdown-stale-guard/blob/main/LICENSE
 [jsdocs-src]: https://img.shields.io/badge/jsdocs-reference-080f12?style=flat&colorA=080f12&colorB=1fa669
-[jsdocs-href]: https://www.jsdocs.io/package/tsdown-lock
+[jsdocs-href]: https://www.jsdocs.io/package/tsdown-stale-guard
