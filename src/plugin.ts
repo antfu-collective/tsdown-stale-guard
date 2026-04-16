@@ -1,0 +1,107 @@
+import type { Plugin } from 'rolldown'
+import type { TsdownLockEntry, TsdownLockPluginOptions } from './types'
+import { existsSync } from 'node:fs'
+import { readdir, stat } from 'node:fs/promises'
+
+import { relative, resolve } from 'node:path'
+import process from 'node:process'
+import { detectPackageLock, detectTsdownConfig } from './detect'
+import { computeCompositeHash, hashFile, hashFiles } from './hash'
+import { writeLockFile } from './lockfile'
+
+const RE_QUERY = /\?.*$/
+const RE_WINDOWS_DRIVE = /^[a-z]:\\/i
+const RE_NODE_MODULES = /node_modules/
+
+export function TsdownLock(options: TsdownLockPluginOptions = {}): Plugin {
+  const {
+    lockFile = 'tsdown.lock.yaml',
+    hashOutputs = true,
+  } = options
+
+  const sourceIds = new Set<string>()
+  let root: string
+
+  return {
+    name: 'tsdown-lock',
+
+    buildStart() {
+      root = options.root || process.cwd()
+    },
+
+    transform: {
+      filter: {
+        id: {
+          exclude: [RE_NODE_MODULES],
+        },
+      },
+      handler(_code, id) {
+        const cleanId = id.replace(RE_QUERY, '')
+        if (cleanId.startsWith('/') || RE_WINDOWS_DRIVE.test(cleanId))
+          sourceIds.add(cleanId)
+      },
+    },
+
+    async writeBundle(opts) {
+      const outDir = opts.dir || resolve(root, 'dist')
+      const lockFilePath = resolve(root, lockFile)
+
+      // Hash source files (filter to files that exist — DTS pass may add virtual IDs)
+      const existingSources = [...sourceIds].filter(f => existsSync(f))
+      const sources = await hashFiles(existingSources, root)
+
+      // Hash output files by scanning the output directory
+      let outputs: TsdownLockEntry[] = []
+      if (hashOutputs && existsSync(outDir)) {
+        const files = await readdir(outDir, { recursive: true })
+        const outputPaths: string[] = []
+        for (const f of files) {
+          const p = resolve(outDir, f)
+          const s = await stat(p)
+          if (s.isFile())
+            outputPaths.push(p)
+        }
+        outputs = await hashFiles(outputPaths, root)
+      }
+
+      // Detect and hash config & lockfile
+      let config: TsdownLockEntry | undefined
+      const configPath = detectTsdownConfig(root)
+      if (configPath) {
+        const hash = await hashFile(configPath)
+        const file = toForwardSlash(relative(root, configPath))
+        config = { file, hash }
+      }
+
+      let lockfileEntry: TsdownLockEntry | undefined
+      const lockfilePath = detectPackageLock(root)
+      if (lockfilePath) {
+        const hash = await hashFile(lockfilePath)
+        const file = toForwardSlash(relative(root, lockfilePath))
+        lockfileEntry = { file, hash }
+      }
+
+      // Compute composite hash
+      const allEntries = [
+        ...sources,
+        ...outputs,
+        ...(config ? [config] : []),
+        ...(lockfileEntry ? [lockfileEntry] : []),
+      ]
+      const hash = computeCompositeHash(allEntries)
+
+      await writeLockFile(lockFilePath, {
+        version: 1,
+        hash,
+        config,
+        lockfile: lockfileEntry,
+        sources,
+        outputs,
+      })
+    },
+  }
+}
+
+function toForwardSlash(p: string): string {
+  return p.replace(/\\/g, '/')
+}

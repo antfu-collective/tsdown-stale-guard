@@ -1,0 +1,5 @@
+{
+  "name": "fixture-with-deps",
+  "type": "module",
+  "private": true
+}

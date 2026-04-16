@@ -1,2 +1,11 @@
-export const one = 1
-export const two = 2
+export { checkBuildFreshness } from './check'
+export { parseLockFile, readLockFile, serializeLockFile } from './lockfile'
+export { TsdownLock } from './plugin'
+export type {
+  CheckChange,
+  CheckOptions,
+  CheckResult,
+  TsdownLockData,
+  TsdownLockEntry,
+  TsdownLockPluginOptions,
+} from './types'
