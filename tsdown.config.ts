@@ -14,4 +14,9 @@ export default defineConfig({
     ApiSnapshot(),
     TsdownStaleGuard(),
   ],
+  deps: {
+    neverBundle: [
+      'rolldown',
+    ],
+  },
 })
