@@ -1,5 +1,5 @@
 {
-  "name": "tsdown-lock",
+  "name": "tsdown-stale-guard",
   "type": "module",
   "version": "0.0.0",
   "packageManager": "pnpm@10.33.0",
@@ -7,16 +7,16 @@
   "author": "Anthony Fu <anthonyfu117@hotmail.com>",
   "license": "MIT",
   "funding": "https://github.com/sponsors/antfu",
-  "homepage": "https://github.com/antfu/tsdown-lock#readme",
+  "homepage": "https://github.com/antfu/tsdown-stale-guard#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/antfu/tsdown-lock.git"
+    "url": "git+https://github.com/antfu/tsdown-stale-guard.git"
   },
-  "bugs": "https://github.com/antfu/tsdown-lock/issues",
+  "bugs": "https://github.com/antfu/tsdown-stale-guard/issues",
   "keywords": [
     "tsdown",
     "build",
-    "lock",
+    "stale",
     "hash",
     "freshness"
   ],
@@ -30,7 +30,7 @@
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.mts",
   "bin": {
-    "tsdown-lock": "./dist/cli.mjs"
+    "tsdown-stale-guard": "./dist/cli.mjs"
   },
   "files": [
     "dist"

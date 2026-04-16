@@ -1,6 +1,6 @@
 import { defineConfig } from 'tsdown'
 import ApiSnapshot from 'tsnapi/rolldown'
-import { TsdownLock } from './src/index.ts'
+import { TsdownStaleGuard } from './src/index.ts'
 
 export default defineConfig({
   entry: [
@@ -12,6 +12,6 @@ export default defineConfig({
   publint: true,
   plugins: [
     ApiSnapshot(),
-    TsdownLock(),
+    TsdownStaleGuard(),
   ],
 })

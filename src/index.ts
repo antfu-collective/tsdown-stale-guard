@@ -1,11 +1,11 @@
 export { checkBuildFreshness } from './check'
-export { parseLockFile, readLockFile, serializeLockFile } from './lockfile'
-export { TsdownLock } from './plugin'
+export { parseHashFile, readHashFile, serializeHashFile } from './lockfile'
+export { TsdownStaleGuard } from './plugin'
 export type {
   CheckChange,
   CheckOptions,
   CheckResult,
-  TsdownLockData,
-  TsdownLockEntry,
-  TsdownLockPluginOptions,
+  TsdownStaleGuardData,
+  TsdownStaleGuardEntry,
+  TsdownStaleGuardPluginOptions,
 } from './types'

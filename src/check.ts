@@ -1,15 +1,17 @@
-import type { CheckChange, CheckOptions, CheckResult, TsdownLockEntry } from './types'
+import type { CheckChange, CheckOptions, CheckResult, TsdownStaleGuardEntry } from './types'
 import { existsSync } from 'node:fs'
 import { resolve } from 'node:path'
 import process from 'node:process'
 import { computeCompositeHash, hashFile } from './hash'
-import { readLockFile } from './lockfile'
+import { readHashFile } from './lockfile'
+
+const DEFAULT_HASH_FILE = 'node_modules/.cache/tsdown-stale-guard/hash.yaml'
 
 export async function checkBuildFreshness(options: CheckOptions = {}): Promise<CheckResult> {
   const root = options.root || process.cwd()
-  const lockFilePath = resolve(root, options.lockFile || 'tsdown.lock.yaml')
+  const hashFilePath = resolve(root, options.hashFile || DEFAULT_HASH_FILE)
 
-  const data = await readLockFile(lockFilePath)
+  const data = await readHashFile(hashFilePath)
   const changes: CheckChange[] = []
 
   // Check config
@@ -42,7 +44,7 @@ export async function checkBuildFreshness(options: CheckOptions = {}): Promise<C
 }
 
 async function checkEntry(
-  entry: TsdownLockEntry,
+  entry: TsdownStaleGuardEntry,
   category: CheckChange['category'],
   root: string,
   changes: CheckChange[],

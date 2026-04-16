@@ -3,9 +3,10 @@ import { readFile, rm, writeFile } from 'node:fs/promises'
 import { resolve } from 'node:path'
 import { build } from 'tsdown'
 import { afterEach, describe, expect, it } from 'vitest'
-import { checkBuildFreshness, parseLockFile, TsdownLock } from '../src'
+import { checkBuildFreshness, parseHashFile, TsdownStaleGuard } from '../src'
 
 const fixtures = resolve(import.meta.dirname, 'fixtures')
+const HASH_FILE = 'node_modules/.cache/tsdown-stale-guard/hash.yaml'
 
 function fixtureDir(name: string) {
   return resolve(fixtures, name)
@@ -14,7 +15,7 @@ function fixtureDir(name: string) {
 async function cleanFixture(name: string) {
   const dir = fixtureDir(name)
   await rm(resolve(dir, 'dist'), { recursive: true, force: true })
-  await rm(resolve(dir, 'tsdown.lock.yaml'), { force: true })
+  await rm(resolve(dir, HASH_FILE), { force: true })
 }
 
 async function buildFixture(name: string, entry: string[] = ['src/index.ts']) {
@@ -24,25 +25,25 @@ async function buildFixture(name: string, entry: string[] = ['src/index.ts']) {
     cwd: dir,
     entry: entry.map(e => resolve(dir, e)),
     outDir: resolve(dir, 'dist'),
-    plugins: [TsdownLock({ root: dir })],
+    plugins: [TsdownStaleGuard({ root: dir })],
   })
 }
 
-async function readLock(name: string) {
-  const content = await readFile(resolve(fixtureDir(name), 'tsdown.lock.yaml'), 'utf-8')
-  return parseLockFile(content)
+async function readHash(name: string) {
+  const content = await readFile(resolve(fixtureDir(name), HASH_FILE), 'utf-8')
+  return parseHashFile(content)
 }
 
 describe('basic fixture', () => {
   afterEach(() => cleanFixture('basic'))
 
-  it('generates lock file after build', async () => {
+  it('generates hash file after build', async () => {
     await buildFixture('basic')
 
-    const lockPath = resolve(fixtureDir('basic'), 'tsdown.lock.yaml')
-    expect(existsSync(lockPath)).toBe(true)
+    const hashPath = resolve(fixtureDir('basic'), HASH_FILE)
+    expect(existsSync(hashPath)).toBe(true)
 
-    const data = await readLock('basic')
+    const data = await readHash('basic')
     expect(data.version).toBe(1)
     expect(data.hash).toMatch(/^sha256:[a-f0-9]{64}$/)
   })
@@ -50,7 +51,7 @@ describe('basic fixture', () => {
   it('records source files', async () => {
     await buildFixture('basic')
 
-    const data = await readLock('basic')
+    const data = await readHash('basic')
     const sourceFiles = data.sources.map(s => s.file)
     expect(sourceFiles.some(f => f.includes('src/index.ts'))).toBe(true)
   })
@@ -58,7 +59,7 @@ describe('basic fixture', () => {
   it('records output files', async () => {
     await buildFixture('basic')
 
-    const data = await readLock('basic')
+    const data = await readHash('basic')
     expect(data.outputs.length).toBeGreaterThan(0)
     const outputFiles = data.outputs.map(o => o.file)
     expect(outputFiles.some(f => f.includes('dist/'))).toBe(true)
@@ -67,7 +68,7 @@ describe('basic fixture', () => {
   it('detects tsdown config', async () => {
     await buildFixture('basic')
 
-    const data = await readLock('basic')
+    const data = await readHash('basic')
     expect(data.config).toBeDefined()
     expect(data.config!.file).toContain('tsdown.config.ts')
     expect(data.config!.hash).toMatch(/^sha256:[a-f0-9]{64}$/)
@@ -76,7 +77,7 @@ describe('basic fixture', () => {
   it('detects package lock file', async () => {
     await buildFixture('basic')
 
-    const data = await readLock('basic')
+    const data = await readHash('basic')
     expect(data.lockfile).toBeDefined()
     expect(data.lockfile!.hash).toMatch(/^sha256:[a-f0-9]{64}$/)
   })
@@ -84,7 +85,7 @@ describe('basic fixture', () => {
   it('all hashes are valid sha256', async () => {
     await buildFixture('basic')
 
-    const data = await readLock('basic')
+    const data = await readHash('basic')
     const allEntries = [
       ...data.sources,
       ...data.outputs,
@@ -102,7 +103,7 @@ describe('multi-entry fixture', () => {
   it('tracks sources from all entry points', async () => {
     await buildFixture('multi-entry', ['src/index.ts', 'src/cli.ts'])
 
-    const data = await readLock('multi-entry')
+    const data = await readHash('multi-entry')
     const sourceFiles = data.sources.map(s => s.file)
 
     // Should include both entry points and the shared math module
@@ -114,7 +115,7 @@ describe('multi-entry fixture', () => {
   it('produces multiple output files', async () => {
     await buildFixture('multi-entry', ['src/index.ts', 'src/cli.ts'])
 
-    const data = await readLock('multi-entry')
+    const data = await readHash('multi-entry')
     expect(data.outputs.length).toBeGreaterThanOrEqual(2)
   })
 })
@@ -125,7 +126,7 @@ describe('with-deps fixture', () => {
   it('tracks all transitive source dependencies', async () => {
     await buildFixture('with-deps')
 
-    const data = await readLock('with-deps')
+    const data = await readHash('with-deps')
     const sourceFiles = data.sources.map(s => s.file)
 
     expect(sourceFiles.some(f => f.includes('src/index.ts'))).toBe(true)
@@ -198,13 +199,13 @@ describe('freshness check', () => {
     }
   })
 
-  it('idempotent: two consecutive builds produce same lock', async () => {
+  it('idempotent: two consecutive builds produce same hash file', async () => {
     await buildFixture('basic')
-    const lock1 = await readFile(resolve(fixtureDir('basic'), 'tsdown.lock.yaml'), 'utf-8')
+    const hash1 = await readFile(resolve(fixtureDir('basic'), HASH_FILE), 'utf-8')
 
     await buildFixture('basic')
-    const lock2 = await readFile(resolve(fixtureDir('basic'), 'tsdown.lock.yaml'), 'utf-8')
+    const hash2 = await readFile(resolve(fixtureDir('basic'), HASH_FILE), 'utf-8')
 
-    expect(lock1).toBe(lock2)
+    expect(hash1).toBe(hash2)
   })
 })

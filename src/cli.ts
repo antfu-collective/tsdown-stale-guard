@@ -6,10 +6,10 @@ const args = process.argv.slice(2)
 const command = args[0]
 
 if (command === 'check') {
-  const lockFileIdx = args.indexOf('--lock-file')
-  const lockFile = lockFileIdx !== -1 ? args[lockFileIdx + 1] : undefined
+  const hashFileIdx = args.indexOf('--hash-file')
+  const hashFile = hashFileIdx !== -1 ? args[hashFileIdx + 1] : undefined
 
-  const result = await checkBuildFreshness({ lockFile })
+  const result = await checkBuildFreshness({ hashFile })
 
   if (result.fresh) {
     console.log('Build is up to date.')
@@ -23,14 +23,14 @@ if (command === 'check') {
   }
 }
 else {
-  console.log(`tsdown-lock - Build freshness validation for tsdown
+  console.log(`tsdown-stale-guard - Build freshness validation for tsdown
 
 Usage:
-  tsdown-lock check              Check if the build is up to date
-  tsdown-lock check --lock-file <path>  Use a custom lock file path
+  tsdown-stale-guard check              Check if the build is up to date
+  tsdown-stale-guard check --hash-file <path>  Use a custom hash file path
 
 Options:
-  --lock-file <path>  Path to the lock file (default: tsdown.lock.yaml)
+  --hash-file <path>  Path to the hash file (default: node_modules/.cache/tsdown-stale-guard/hash.yaml)
   --help              Show this help message`)
   process.exit(command === '--help' || command === '-h' ? 0 : 1)
 }
