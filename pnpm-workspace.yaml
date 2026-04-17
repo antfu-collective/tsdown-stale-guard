@@ -17,6 +17,7 @@ catalogs:
     lint-staged: ^16.4.0
     publint: ^0.3.18
     simple-git-hooks: ^2.13.1
+    skills-npm: ^1.1.1
     tsdown: ^0.21.9
     tsx: ^4.21.0
     typescript: ^6.0.2
@@ -25,6 +26,7 @@ catalogs:
     '@antfu/utils': ^9.3.0
   prod:
     cac: ^7.0.0
+    logs-sdk: 0.0.6
     yaml: ^2.8.3
   testing:
     tsnapi: ^0.3.0

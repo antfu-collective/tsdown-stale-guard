@@ -17,6 +17,8 @@ Build freshness validation for [tsdown](https://github.com/rolldown/tsdown). Rec
 - **Find-up search** — detects lock files and configs in monorepo setups
 - **CLI** — `tsdown-stale-guard` for CI pipelines
 - **Programmatic API** — `checkBuildState()` for tool integrations
+- **Build guard** — `guardStaleBuild()` throws on stale builds, great for test setups
+- **Structured diagnostics** — errors use [logs-sdk](https://github.com/vercel-labs/logs-sdk) with stable codes and actionable fixes
 
 ## Install
 
@@ -102,6 +104,66 @@ else {
   }
 }
 ```
+
+### Guard Stale Build
+
+`guardStaleBuild()` checks the build state and throws a structured [`TSDSG0002`](./docs/errors/tsdsg0002.md) error if the build is stale. This is useful for CI pipelines or test setups where you want to fail early when the build output is outdated.
+
+```ts
+import { guardStaleBuild } from 'tsdown-stale-guard'
+
+// Throws if the build is stale
+await guardStaleBuild()
+```
+
+#### With Vitest
+
+When writing tests against the built output (`dist/`), you can use `guardStaleBuild()` to ensure the build is fresh before tests run. Use `beforeAll` for a per-test-file check:
+
+```ts
+import { guardStaleBuild } from 'tsdown-stale-guard'
+import { beforeAll, describe, it } from 'vitest'
+
+beforeAll(async () => {
+  await guardStaleBuild()
+})
+
+it('should work', async () => {
+  const { myFunction } = await import('../dist/index.mjs')
+  // test against the built output
+})
+```
+
+Or use `globalSetup` for a one-time global check:
+
+```ts
+// test/setup.ts
+import { guardStaleBuild } from 'tsdown-stale-guard'
+
+await guardStaleBuild()
+```
+
+```ts
+// vitest.config.ts
+import { defineConfig } from 'vitest/config'
+
+export default defineConfig({
+  test: {
+    globalSetup: ['test/setup.ts'],
+  },
+})
+```
+
+Either way, tests fail immediately with a clear error message if the build is stale, instead of producing confusing failures from outdated output.
+
+### Diagnostic Codes
+
+All errors thrown by `tsdown-stale-guard` are structured [`CodedError`](https://github.com/vercel-labs/logs-sdk) objects with stable codes, actionable `fix` messages, and documentation links.
+
+| Code | Level | Description |
+|------|-------|-------------|
+| [`TSDSG0001`](./docs/errors/tsdsg0001.md) | error | `tsdownConfigResolved` hook was not called (tsdown version too old) |
+| [`TSDSG0002`](./docs/errors/tsdsg0002.md) | error | Build is stale — source files, config, or dependencies changed |
 
 ## How It Works
 

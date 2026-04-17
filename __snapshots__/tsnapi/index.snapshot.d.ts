@@ -35,7 +35,40 @@ export interface StaleGuardRecorderOptions {
 
 // Functions
 export declare function checkBuildState(_?: CheckOptions): Promise<CheckResult>;
+export declare function guardStaleBuild(_?: CheckOptions): Promise<void>;
 export declare function parseHashFile(_: string): StaleGuardData;
 export declare function readHashFile(_: string): Promise<StaleGuardData>;
 export declare function serializeHashFile(_: StaleGuardData): string;
 export declare function StaleGuardRecorder(_?: StaleGuardRecorderOptions): TsdownPlugin;
+
+// Variables
+export declare const diagnostics: _$logs_sdk0.DiagnosticsResult<{
+  TSDSG0001: {
+    message: string;
+    why: string;
+    fix: string;
+  };
+  TSDSG0002: {
+    message: (p: {
+      root: string;
+      changeCount: number;
+    }) => string;
+    why: string;
+    fix: string;
+  };
+}>;
+export declare const log: _$logs_sdk0.Logger<[_$logs_sdk0.DiagnosticsResult<{
+  TSDSG0001: {
+    message: string;
+    why: string;
+    fix: string;
+  };
+  TSDSG0002: {
+    message: (p: {
+      root: string;
+      changeCount: number;
+    }) => string;
+    why: string;
+    fix: string;
+  };
+}>]>;
