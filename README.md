@@ -118,7 +118,23 @@ await guardStaleBuild()
 
 #### With Vitest
 
-When writing tests against the built output (`dist/`), you can use `guardStaleBuild()` to ensure the build is fresh before tests run:
+When writing tests against the built output (`dist/`), you can use `guardStaleBuild()` to ensure the build is fresh before tests run. Use `beforeAll` for a per-test-file check:
+
+```ts
+import { guardStaleBuild } from 'tsdown-stale-guard'
+import { beforeAll, describe, it } from 'vitest'
+
+beforeAll(async () => {
+  await guardStaleBuild()
+})
+
+it('should work', async () => {
+  const { myFunction } = await import('../dist/index.mjs')
+  // test against the built output
+})
+```
+
+Or use `globalSetup` for a one-time global check:
 
 ```ts
 // test/setup.ts
@@ -138,7 +154,7 @@ export default defineConfig({
 })
 ```
 
-This ensures tests that import from `dist/` always run against the latest build, and fail immediately with a clear error message if the build is stale instead of producing confusing test failures from outdated output.
+Either way, tests fail immediately with a clear error message if the build is stale, instead of producing confusing failures from outdated output.
 
 ### Diagnostic Codes
 
