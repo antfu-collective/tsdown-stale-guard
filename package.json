@@ -42,13 +42,14 @@
     "start": "tsx src/index.ts",
     "test": "vitest",
     "typecheck": "tsc",
-    "prepare": "simple-git-hooks"
+    "prepare": "simple-git-hooks && skills-npm"
   },
   "peerDependencies": {
     "tsdown": "^0.21.9"
   },
   "dependencies": {
     "cac": "catalog:prod",
+    "logs-sdk": "catalog:prod",
     "yaml": "catalog:prod"
   },
   "devDependencies": {
@@ -61,6 +62,7 @@
     "lint-staged": "catalog:cli",
     "publint": "catalog:cli",
     "simple-git-hooks": "catalog:cli",
+    "skills-npm": "catalog:cli",
     "tsdown": "catalog:cli",
     "tsnapi": "catalog:testing",
     "tsx": "catalog:cli",

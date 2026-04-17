@@ -5,6 +5,7 @@ import { readdir } from 'node:fs/promises'
 
 import { relative, resolve } from 'node:path'
 import { detectPackageLock } from './detect'
+import { log } from './diagnostics'
 import { computeCompositeHash, hashFile, hashFiles } from './hash'
 import { writeHashFile } from './lockfile'
 
@@ -51,7 +52,7 @@ export function StaleGuardRecorder(options: StaleGuardRecorderOptions = {}): Tsd
 
     async writeBundle() {
       if (!isTsdownConfigResolvedCalled)
-        throw new Error('tsdownConfigResolved is not being called correctly. `tsdown-stale-guard` requires `tsdown@0.21.9` or later, please check your tsdown version.')
+        return log.TSDSG_0001().throw()
 
       const resolvedHashFile = resolve(root, hashFilePath)
 
