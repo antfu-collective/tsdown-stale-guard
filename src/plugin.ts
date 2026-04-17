@@ -52,7 +52,7 @@ export function StaleGuardRecorder(options: StaleGuardRecorderOptions = {}): Tsd
 
     async writeBundle() {
       if (!isTsdownConfigResolvedCalled)
-        return log.TSDSG_0001().throw()
+        return log.TSDSG0001().throw()
 
       const resolvedHashFile = resolve(root, hashFilePath)
 

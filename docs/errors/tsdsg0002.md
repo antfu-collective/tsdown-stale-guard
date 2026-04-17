@@ -1,6 +1,6 @@
-# TSDSG_0002: Build is stale
+# TSDSG0002: Build is stale
 
-Code: `TSDSG_0002`
+Code: `TSDSG0002`
 Level: error
 
 ## What this error means
@@ -41,8 +41,8 @@ if (result.stale) {
 ## Example output
 
 ```
-[TSDSG_0002] Build is stale in `/path/to/project`. 3 files changed since last build.
+[TSDSG0002] Build is stale in `/path/to/project`. 3 files changed since last build.
 ├▶ why: Source files, config, or dependencies have changed since the last build.
 ├▶ fix: Run your build script (e.g. `npm run build`) or `tsdown` directly to rebuild the project.
-╰▶ see: https://github.com/antfu-collective/tsdown-stale-guard/blob/main/docs/errors/tsdsg_0002.md
+╰▶ see: https://github.com/antfu-collective/tsdown-stale-guard/blob/main/docs/errors/tsdsg0002.md
 ```

@@ -8,6 +8,6 @@ export async function guardStaleBuild(options: CheckOptions = {}): Promise<void>
   const result = await checkBuildState(options)
 
   if (result.stale) {
-    return log.TSDSG_0002({ root, changeCount: result.changes.length }).throw()
+    return log.TSDSG0002({ root, changeCount: result.changes.length }).throw()
   }
 }

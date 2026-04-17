@@ -43,12 +43,12 @@ export declare function StaleGuardRecorder(_?: StaleGuardRecorderOptions): Tsdow
 
 // Variables
 export declare const diagnostics: _$logs_sdk0.DiagnosticsResult<{
-  TSDSG_0001: {
+  TSDSG0001: {
     message: string;
     why: string;
     fix: string;
   };
-  TSDSG_0002: {
+  TSDSG0002: {
     message: (p: {
       root: string;
       changeCount: number;
@@ -58,12 +58,12 @@ export declare const diagnostics: _$logs_sdk0.DiagnosticsResult<{
   };
 }>;
 export declare const log: _$logs_sdk0.Logger<[_$logs_sdk0.DiagnosticsResult<{
-  TSDSG_0001: {
+  TSDSG0001: {
     message: string;
     why: string;
     fix: string;
   };
-  TSDSG_0002: {
+  TSDSG0002: {
     message: (p: {
       root: string;
       changeCount: number;

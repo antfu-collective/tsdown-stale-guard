@@ -1,6 +1,6 @@
-# TSDSG_0001: tsdownConfigResolved hook not called
+# TSDSG0001: tsdownConfigResolved hook not called
 
-Code: `TSDSG_0001`
+Code: `TSDSG0001`
 Level: error
 
 ## What this error means
@@ -30,8 +30,8 @@ npx tsdown --version
 ## Example output
 
 ```
-[TSDSG_0001] The `tsdownConfigResolved` hook was not called.
+[TSDSG0001] The `tsdownConfigResolved` hook was not called.
 ├▶ why: The `tsdownConfigResolved` hook is only available since `tsdown@0.21.9`. Your version of tsdown may not support it.
 ├▶ fix: Upgrade tsdown to `0.21.9` or later.
-╰▶ see: https://github.com/antfu-collective/tsdown-stale-guard/blob/main/docs/errors/tsdsg_0001.md
+╰▶ see: https://github.com/antfu-collective/tsdown-stale-guard/blob/main/docs/errors/tsdsg0001.md
 ```
