@@ -20,7 +20,7 @@ catalogs:
     skills-npm: ^1.1.1
     tsdown: ^0.21.9
     tsx: ^4.21.0
-    typescript: ^6.0.2
+    typescript: ^6.0.3
     vite: ^8.0.8
   inlined:
     '@antfu/utils': ^9.3.0
@@ -29,7 +29,7 @@ catalogs:
     logs-sdk: 0.0.6
     yaml: ^2.8.3
   testing:
-    tsnapi: ^0.3.0
+    tsnapi: ^0.3.2
     vitest: ^4.1.4
   types:
     '@types/node': ^25.6.0
