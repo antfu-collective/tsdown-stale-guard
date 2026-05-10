@@ -2,7 +2,7 @@
   "name": "tsdown-stale-guard",
   "type": "module",
   "version": "0.1.1",
-  "packageManager": "pnpm@10.33.0",
+  "packageManager": "pnpm@11.0.9",
   "description": "Build freshness validation for tsdown",
   "author": "Anthony Fu <anthonyfu117@hotmail.com>",
   "license": "MIT",
@@ -67,6 +67,7 @@
     "tsnapi": "catalog:testing",
     "tsx": "catalog:cli",
     "typescript": "catalog:cli",
+    "unrun": "catalog:cli",
     "vite": "catalog:cli",
     "vitest": "catalog:testing"
   },
