@@ -45,7 +45,7 @@
     "prepare": "simple-git-hooks && skills-npm"
   },
   "peerDependencies": {
-    "tsdown": "^0.21.9"
+    "tsdown": "^0.21.9 || ^0.22.0"
   },
   "dependencies": {
     "cac": "catalog:prod",
