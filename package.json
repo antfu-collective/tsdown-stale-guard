@@ -1,7 +1,7 @@
 {
   "name": "tsdown-stale-guard",
   "type": "module",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "packageManager": "pnpm@11.0.9",
   "description": "Build freshness validation for tsdown",
   "author": "Anthony Fu <anthonyfu117@hotmail.com>",
