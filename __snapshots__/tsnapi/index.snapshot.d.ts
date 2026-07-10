@@ -59,6 +59,13 @@ export declare const diagnostics: _$logs_sdk0.DiagnosticsResult<{
     why: string;
     fix: string;
   };
+  TSDSG0003: {
+    message: (p: {
+      root: string;
+    }) => string;
+    why: string;
+    fix: string;
+  };
 }>;
 export declare const log: _$logs_sdk0.Logger<[_$logs_sdk0.DiagnosticsResult<{
   TSDSG0001: {
@@ -70,6 +77,13 @@ export declare const log: _$logs_sdk0.Logger<[_$logs_sdk0.DiagnosticsResult<{
     message: (p: {
       root: string;
       changeCount: number;
+    }) => string;
+    why: string;
+    fix: string;
+  };
+  TSDSG0003: {
+    message: (p: {
+      root: string;
     }) => string;
     why: string;
     fix: string;

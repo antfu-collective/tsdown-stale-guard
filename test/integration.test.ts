@@ -134,6 +134,19 @@ describe('with-deps fixture', () => {
   })
 })
 
+describe('missing build', () => {
+  afterEach(() => cleanFixture('basic'))
+
+  it('throws a TSDSG0003 diagnostic instead of a raw ENOENT', async () => {
+    const dir = fixtureDir('basic')
+
+    await expect(checkBuildState({ root: dir })).rejects.toMatchObject({
+      diagnostic: expect.objectContaining({ code: 'TSDSG0003' }),
+      cause: expect.objectContaining({ code: 'ENOENT' }),
+    })
+  })
+})
+
 describe('freshness check', () => {
   afterEach(() => cleanFixture('basic'))
 

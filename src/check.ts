@@ -2,6 +2,7 @@ import type { CheckChange, CheckOptions, CheckResult, StaleGuardEntry } from './
 import { existsSync } from 'node:fs'
 import { resolve } from 'node:path'
 import process from 'node:process'
+import { log } from './diagnostics'
 import { computeCompositeHash, hashFile } from './hash'
 import { readHashFile } from './lockfile'
 
@@ -11,7 +12,11 @@ export async function checkBuildState(options: CheckOptions = {}): Promise<Check
   const root = options.root || process.cwd()
   const hashFilePath = resolve(root, options.hashFile || DEFAULT_HASH_FILE)
 
-  const data = await readHashFile(hashFilePath)
+  const data = await readHashFile(hashFilePath).catch((error: unknown) => {
+    if (isEnoent(error))
+      log.TSDSG0003({ root }, { cause: error }).throw()
+    throw error
+  })
   const changes: CheckChange[] = []
 
   // Check configs
@@ -62,4 +67,8 @@ async function checkEntry(
   const currentHash = await hashFile(filePath)
   if (currentHash !== entry.hash)
     changes.push({ type: 'changed', category, file: entry.file })
+}
+
+function isEnoent(error: unknown): error is NodeJS.ErrnoException {
+  return error instanceof Error && (error as NodeJS.ErrnoException).code === 'ENOENT'
 }
