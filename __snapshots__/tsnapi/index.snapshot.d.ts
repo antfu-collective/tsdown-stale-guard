@@ -45,7 +45,7 @@ export declare function StaleGuardRecorder(_?: StaleGuardRecorderOptions): Tsdow
 // #endregion
 
 // #region Variables
-export declare const diagnostics: _$logs_sdk0.DiagnosticsResult<{
+export declare const diagnostics: import("logs-sdk").DiagnosticsResult<{
   TSDSG0001: {
     message: string;
     why: string;
@@ -67,7 +67,7 @@ export declare const diagnostics: _$logs_sdk0.DiagnosticsResult<{
     fix: string;
   };
 }>;
-export declare const log: _$logs_sdk0.Logger<[_$logs_sdk0.DiagnosticsResult<{
+export declare const log: import("logs-sdk").Logger<[import("logs-sdk").DiagnosticsResult<{
   TSDSG0001: {
     message: string;
     why: string;
