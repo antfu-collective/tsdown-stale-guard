@@ -14,6 +14,12 @@ export const diagnostics = defineDiagnostics({
       why: 'Source files, config, or dependencies have changed since the last build.',
       fix: 'Run your build script (e.g. `npm run build`) or `tsdown` directly to rebuild the project.',
     },
+    TSDSG0003: {
+      message: (p: { root: string }) =>
+        `No build found in \`${p.root}\`. tsdown has not been run yet.`,
+      why: 'The stale-guard hash file does not exist, which means `tsdown` (with the `StaleGuardRecorder` plugin) has never built this package, or its cache was cleared.',
+      fix: 'Run your build script (e.g. `npm run build`) or `tsdown` directly to produce a build.',
+    },
   },
 })
 
